@@ -26,6 +26,7 @@ DEBUG = False if os.getenv('DJANGO_DEBUG', True) == 'False' else True
 # e.g. localhost,127.0.0.1,.herokuapp.com
 allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', [])
 ALLOWED_HOSTS = allowed_hosts.split(',') if allowed_hosts else []
+ALLOWED_HOSTS += ['172.17.0.1', 'localhost', '127.0.0.1']
 
 # Application definition
 
