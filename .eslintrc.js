@@ -3,13 +3,20 @@ module.exports = {
     __PATH_PREFIX__: true,
   },
   rules: {
-    "indent": ["error", 2],
+    indent: ["error", 2],
     "no-console": "off",
-    "strict": ["error", "global"],
-    "curly": "warn",
-    "semi": ["error", "never"],
+    strict: ["error", "global"],
+    curly: "warn",
+    semi: ["error", "never"],
     "space-in-parens": ["error", "never"],
     "space-before-function-paren": ["error", "always"],
-    "space-before-blocks": ["error", "always"]
-  }
-}
+    "space-before-blocks": ["error", "always"],
+  },
+  parserOptions: {
+    ecmaVersion: 2017,
+  },
+
+  env: {
+    es6: true,
+  },
+};
