@@ -33,10 +33,9 @@ class AddressParse(APIView):
             address_components, address_type = self.parse(input_string)
         except usaddress.RepeatedLabelError as e:
             address_components, address_type = e.parsed_string, 'Error'
-        finally:
-            return Response({'input_string': input_string,
-                             'address_components': address_components,
-                             'address_type': address_type})
+        return Response({'input_string': input_string,
+                         'address_components': address_components,
+                         'address_type': address_type})
 
     def parse(self, address):
         # TODO: Implement this method to return the parsed components of a
