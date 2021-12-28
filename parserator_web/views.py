@@ -28,14 +28,19 @@ class AddressParse(APIView):
                             status=400)
 
         input_string = request.query_params['address']
+        status, error = 200, 'None.'
 
         try:
             address_components, address_type = self.parse(input_string)
         except usaddress.RepeatedLabelError as e:
             address_components, address_type = e.parsed_string, 'Error'
+            status, error = 400, 'Could not parse due to a repeated label.'
+
         return Response({'input_string': input_string,
                          'address_components': address_components,
-                         'address_type': address_type})
+                         'address_type': address_type,
+                         'error': error},
+                        status=status)
 
     def parse(self, address):
         # TODO: Implement this method to return the parsed components of a
