@@ -23,7 +23,9 @@ class AddressParse(APIView):
         if 'address' not in request.query_params:
             return Response({'input_string': '',
                              'address_components': address_components,
-                             'address_type': address_type})
+                             'address_type': address_type,
+                             'error': 'No address provided.'},
+                            status=400)
 
         input_string = request.query_params['address']
 
