@@ -2,11 +2,7 @@
    in the #address-results div. */
 "use strict"
 
-const resultsTable = document.getElementById("address-results"),
-  errorMessage = document.getElementById("error-message"),
-  parseType = document.getElementById("parse-type"),
-  resultsTableBody = document.getElementById("address-results-body"),
-  addressInput = document.getElementById("address"),
+const addressInput = document.getElementById("address"),
   submitButton = document.getElementById("submit"),
   form = document.getElementById("parserator-form")
 
@@ -28,8 +24,11 @@ addressInput.addEventListener("keyup", (e) => {
  *
  */
 async function parseAddress (address) {
+  const errorElement = document.getElementById("error-message"),
+    resultsTable = document.getElementById("address-results")
+
   if (address === "") {
-    displayError("Enter an address!")
+    displayError(errorElement, resultsTable, "Enter an address!")
     return
   }
 
@@ -37,14 +36,17 @@ async function parseAddress (address) {
     json = await response.json()
 
   switch (json.address_type) {
-  case "Error":
-    displayError("Error: Could not parse due to a repeated label.")
-    break
+    case "Error":
+      displayError(errorElement, resultsTable, "Error: Could not parse due to a repeated label.")
+      break
   default:
+    const resultsTableBody = document.getElementById("address-results-body"),
+      parseType = document.getElementById("parse-type")
+
     clearTable(resultsTableBody)
-    displayTable()
     parseType.innerHTML = json.address_type
-    fillResultsTable(json.address_components)
+    fillResultsTable(resultsTableBody, json.address_components)
+    displayTable(resultsTable, errorElement)
   }
 }
 
@@ -62,34 +64,41 @@ function clearTable (tableBody) {
 }
 
 /**
- * Displays an error and hides the table.
+ * Displays an error.
  *
+ * @param {HTMLElement} errorElement - the div containing the message
+ * @param {HTMLElement} resultsTable - the results table
  * @param {String} message - the error message to be displayed
  *
  */
-function displayError (message) {
+function displayError(errorElement, resultsTable, message) {
   resultsTable.style.display = "none"
-  errorMessage.style.display = ""
-  errorMessage.innerHTML = message
+  errorElement.style.display = ""
+  errorElement.innerHTML = message
 }
 
 /**
- * Hides the error message and displays the results table.
+ * Displays the results table.
+ *
+ * @param {HTMLElement} resultsTable - the results table
+ * @param {HTMLElement} errorElement - the div containing the message
+ *
  */
-function displayTable () {
-  errorMessage.style.display = "none"
+function displayTable(resultsTable, errorElement) {
   resultsTable.style.display = ""
+  errorElement.style.display = "none"
 }
 
 /**
  * Populates the results table with the output of the
  * API.
  *
+ * @param {HTMLElement} resultsTableBody - the body of the results table
  * @param {Object} addressComponents - an object of the
  * form {tag: address-component}.
  *
  */
-function fillResultsTable (addressComponents) {
+function fillResultsTable (resultsTableBody, addressComponents) {
   const components = Object.keys(addressComponents)
   components.forEach((name) => {
     let row = document.createElement("tr"),
